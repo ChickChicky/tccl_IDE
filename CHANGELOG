@@ -1,0 +1,10 @@
+# ? 07/25/2022
+* Initial version
+
+# 0.0.1 08/25/2022
+* Initial commit
+
+# 0.0.2 09/25/2022
+* Moved the styles into a `style.css` file
+* Added better suggestions for autocompletion
+* Fixed an issue where libairies without `<` `>` would not be found

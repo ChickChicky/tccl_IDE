@@ -4,120 +4,10 @@
     
     <head>
 
+        <link rel="stylesheet" href="style.css" type="text/css" media="screen">
+
         <meta charset="UTF-8">
         <title>CODAING</title>
-
-        <style>
-            /* lots of stuff */
-
-            #editing, #highlighting, #ln {
-                margin: 0;
-                padding:0;
-                border: 0;
-                border-radius: 0;
-                outline: none !important;
-                border:0;
-                box-shadow: 0 0 1px #719ECE;
-            }
-            #editing, #highlighting, #ln, #highlighting * {
-                font-size: 15pt;
-                font-family: monospace;
-                line-height: 20pt;
-            }
-            #editing, #highlighting {
-                position: absolute;
-                top: 0;
-                left: 2em;
-                width: calc(100% - 2em);
-                height:100%;
-            }
-            #ln {
-                position: absolute;
-                top: 0;
-                left:0;
-                background-color: #262932;
-                color: #848484;
-                width: 2em;
-                height: 100%;
-            }
-            #ln > * {
-                margin: 2px;
-                align-self: center;
-                font-size: 15pt;
-            }
-            #editing {
-                z-index: 1;
-            }
-            #editing::selection {
-                background-color: #0088ff43;
-                color: unset;
-            }
-            #highlighting {
-                z-index: 0;
-            }
-            #editing {
-                color: transparent;
-                background: transparent;
-                caret-color: white;
-            }
-
-            /* suggestion styling */
-
-            #suggestion-box {
-                color: white;
-                z-index:1.5;
-                margin: 0;
-                padding:0;
-                font-size: 15pt;
-                font-family: monospace;
-                line-height: 20pt;
-                position: absolute;
-                top: 0;
-                left:2em;
-                border: 0;
-            }
-
-            /* the first autocompletion value */
-            #suggestion { 
-                color: #444343;
-            }
-
-            /* the other autocompletion values */
-            #suggestions {
-                padding-top: 0;
-                border-radius: 5pt;
-                background-color: #2a2a2a;
-                box-shadow: 0 0 1px #242424;
-            }
-
-            .show * {
-                transition: 0.2s;
-                opacity: 1;
-            }
-
-            .hide * {
-                transition: 0.1s;
-                opacity: 0;
-            }
-
-            /* rendered text colors (slightly inspired by VSCode's :D) */
-
-            .string          { color: #CE9178 }
-            .class           { color: #4EC9B0 }
-            .value           { color: #9CDCFE }
-            .number          { color: #B5CEA8 }
-            .keyword         { color: #569CD6 }
-            .special-fn      { color: #5665d6 }
-            .special-var     { color: #2a73d5 }
-            .keyword-control { color: #C586C0 }
-            .punctuation     { color: #848484 }
-            .function        { color: #DCDCAA }
-            .const           { color: #4FC1FF }
-            .comment         { color: #6A9955 }
-            .directive       { color: #ca8398 }
-
-            .plaintext { color: #D4D4D4 }
-        </style>
 
         <script>
 
@@ -203,7 +93,7 @@
             }
 
             function onedit(text) {
-                console.log('');
+                //// console.log('');
                 const codeblock = document.getElementById('result');
                 const inputarea = document.getElementById('editing');
 
@@ -222,7 +112,9 @@
                     ['int','string','byte','void','any','boolean','array'].forEach(n=>tmp[n]={type:'class'});
                     ['true','false'].forEach(n=>tmp[n]={flag:'special',type:'boolean'});
                     ['#include','#bind','#alias'].forEach(n=>tmp[n]={flag:'directive'});
-
+                    ['define','set','fn'].forEach(n=>tmp[n]={flag:'keyword'});
+                    ['end','return','loop','break','if','do'].forEach(n=>tmp[n]={flag:'control_keyword'});
+                    ['is','!is','!=','==','>','>=','<','<='].forEach(n=>tmp[n]={flag:'comparator'});
                     scopes.push(tmp);
                 }
 
@@ -277,7 +169,7 @@
 
                     if (i == lasti && t != '\n') {
 
-                        console.log(content);
+                        //// console.log(content);
                         //console.log(scopes);
 
                         if (content.match(/^fn (\w+) (\w+).+$/g)) {
@@ -288,7 +180,7 @@
                             //content.match(/^(?<fn>\w+)(?<fout> (?<out>\w+)(?<fname> (?<name>\w+)(?<params>(?<param> (?<pname>\w+)(?<fps>:(?<ptype>\w+)?)?)*))?)?$/);
                             //let [,ret_type,name,...raw_args] = content.match(/^fn (\w+) (\w+) ?(\w+?:\w+?\s*)*$/);
                             //console.log(ret_type,name,raw_args)
-                            let [,ret_type,name,raw_args] = content.match(/^fn (\w+) (\w+?) (.+)$/);
+                            let [,ret_type,name,raw_args] = content.match(/^fn (\w+) (\w+?) ?(.+)?$/);
                             scopes[scopes.length-1][name] = {type:'function'};
                             scopes.push({});
                             for (let arg of raw_args.split(/\s+/g).map(a=>a.split(':'))) {
@@ -300,9 +192,9 @@
                             let [,type,name] = content.match(/^define (\w+) (\w+)( .+)?$/);
                             scopes[scopes.length-1][name] = {type};
                         }
-                        else if (content.match(/^#include <?\w+>?$/)) {
-                            let [,libname] = content.match(/^#include (<?\w+>?)$/);
-                            if (libname.match(/^(<?\w.+>?)$/)) libname = libname.slice(1,-1)+'.ch++';
+                        else if (content.match(/^#include <?.+>?$/)) {
+                            let [,libname] = content.match(/^#include (<?.+>?)$/);
+                            if (libname.match(/^(<.+?>)$/)) libname = libname.slice(1,-1)+'.ch++';
                             loadLib(libname);
                         }
                         else if (content.match(/^#alias (\w+) (\w+)$/)) {
@@ -320,7 +212,7 @@
 
                     }
 
-                    // console.log(scopes);
+                    //// console.log(scopes);
 
                     let scope = {};
                     for (let s of scopes) { for (let k of Object.keys(s)) { scope[k]=s[k] } };
@@ -413,6 +305,7 @@
                 let currenttokeni;
                 let currentlinepos;
                 let currentlinenum;
+                let currentlinestart=0;
                 let linepos = 0;
                 let linenum = 0;
                 let n = 0;
@@ -423,6 +316,7 @@
                         if (c == '\n') {
                             linepos = 0;
                             linenum++;
+                            currentlinestart = ti;
                         }
                         if (n == inputarea.selectionStart-1) {
                             currenttoken = tok;
@@ -433,6 +327,16 @@
                         n++;
                     }
                 }
+
+                let currentline  = getLine(currenttokeni);
+
+                let currenttokenlinepos = currentline.tokens.filter(
+                    (tk,tki,tka) => {
+                        if (tka.slice(0,tki).some(t=>t.match(/^\s+$/g))) return true;
+                        if (tk.match(/^\s+$/g)) return false;
+                        return true;
+                    }
+                ).length;
 
                 //console.log(inputarea.selectionStart,currentlinenum,currentlinepos);
 
@@ -470,11 +374,54 @@
                         }
                     } else if (currenttoken) {
                         let values = 
-                            Object.keys(caretscope).concat(...['define','set','fn','end','return','loop','break','if','do','is','!is','!=','==','>','>=','<','<='])
+                            Object.keys(caretscope)
                             .filter(v=>Array.from(currenttoken).every(c=>v.includes(c)))
-                            .sort((a,b)=>strdist(a,currenttoken)-strdist(b,currenttoken));
+                        values//.sort((a,b)=>strdist(a,currenttoken)-strdist(b,currenttoken))
+                              .sort((a,b)=>b.startsWith(currenttoken)-a.startsWith(currenttoken));
 
-                        console.log(caretscope,values);
+                        if ( // class priority
+                            (
+                                (tokens[currentlinestart]??'').trim()=='fn' && 
+                                currenttokenlinepos==2
+                            ) ||
+                            (
+                                (tokens[currentlinestart]??'').trim()=='define' && 
+                                currenttokenlinepos==2
+                            )
+                        ) {
+                            values.sort(
+                                (a,b) => ((caretscope[b]??{}).type=='class') - ((caretscope[a]??{}).type=='class')
+                            );
+                        }
+
+                        let score = (varname,...criteria) => {
+                            let v = caretscope[varname]??{};
+                                v.flag ??= '';
+                                v.type ??= ''
+                            let s = 0;
+                            for (let c of criteria) {
+                                if (c.startsWith('f:')) {
+                                    if (v.flag == c.slice(2)) s++;
+                                } else {
+                                    if (v.type == c) s++;
+                                }
+                            }
+                            return s;
+                        }
+
+                        if ( // function / keyword priority or priority to vars
+                            currenttokenlinepos==1
+                        ) {
+                            values.sort(
+                                (a,b) => score(b,'function','f:special_fn','f:keyword','f:control_keyword')-score(a,'function','f:special_fn','f:keyword','f:control_keyword')
+                            );
+                        } else {
+                            values.sort(
+                                (b,a) => score(b,'function','f:special_fn','f:keyword','f:control_keyword')-score(a,'function','f:special_fn','f:keyword','f:control_keyword')
+                            );
+                        }
+
+                        //console.log(caretscope,values);
 
                         let maxl = Math.max(...values.filter(s=>(caretscope[s]??{}).type).map(s=>s.length));
 
@@ -483,7 +430,7 @@
                         if (values.length) {
                             suggestion.innerHTML  = '<span>'+(values[0].slice(currenttoken.length)||'<br>')+'</span>';
                             suggestions.innerHTML = values
-                                .map(s=>`<span class="${basicColor(s)}">${s}${![''].includes((caretscope[s]??{}).type)&&(caretscope[s]??{}).type?`<span class="punctuation">: ${'&nbsp;'.repeat(maxl-s.length)}</span><span class="class">${(caretscope[s]??{}).type}</span>`:''}${(caretscope[s]??{}).src?`<span class="punctuation"> •${(caretscope[s]??{}).src}</span>`:''}</span>`)
+                                .map(s=>`<span class="${basicColor(s)}">${currenttokenlinepos} ${s}${![''].includes((caretscope[s]??{}).type)&&(caretscope[s]??{}).type?`<span class="punctuation">: ${'&nbsp;'.repeat(maxl-s.length)}</span><span class="class">${(caretscope[s]??{}).type}</span>`:''}${(caretscope[s]??{}).src?`<span class="punctuation"> •${(caretscope[s]??{}).src}</span>`:''}</span>`)
                                 .join('<br>');
                             suggestion_box.classList.remove('hide');
                             suggestion_box.classList.add('show');
@@ -509,9 +456,16 @@
 
     <body>
 
+        <!--Comming soon...-->
+        <!--<div id="side-bar">
+
+            <button id="run-button">▶</button>
+
+        </div>-->
+
         <textarea id="editing" onclick="onedit(this.value)" onscroll="onedit(this.value)" oninput="onedit(this.value)" onkeypress="onedit(this.value)" onkeydown="onedit(this.value)" onkeyup="onedit(this.value)"></textarea>
 
-        <pre id="highlighting" aria-hidden="true" style="background-color:#1E1E1E;color:#D4D4D4"><code id="result"></code></pre>
+        <pre id="highlighting" aria-hidden="true"><code id="result"></code></pre>
 
         <pre id="ln"><span>1</span></pre>
 

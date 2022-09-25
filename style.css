@@ -1,0 +1,144 @@
+/* lots of stuff */
+
+#editing, #highlighting, #ln, #side-bar {
+    margin: 0;
+    padding:0;
+    border: 0;
+    border-radius: 0;
+    outline: none !important;
+    border:0;
+    box-shadow: 0 0 1px #719ECE;
+}
+#editing, #highlighting, #ln, #highlighting * {
+    font-size: 15pt;
+    font-family: monospace;
+    line-height: 20pt;
+}
+#editing, #highlighting {
+    position: absolute;
+    top: 0;
+    left: 2em;
+    width: calc(100% - 2em);
+    height:100%;
+}
+#ln {
+    position: absolute;
+    top: 0;
+    left:0;
+    background-color: #262932;
+    color: #848484;
+    width: 2em;
+    height: 100%;
+}
+#ln > * {
+    margin: 2px;
+    align-self: center;
+    font-size: 15pt;
+}
+#editing {
+    z-index: 1;
+}
+#editing::selection {
+    background-color: #0088ff43;
+    color: unset;
+}
+#highlighting {
+    background-color:#1E1E1E;
+    color:#FF0000;
+    z-index: 0;
+}
+#editing {
+    color: transparent;
+    background: transparent;
+    caret-color: white;
+}
+
+/* suggestion styling */
+
+#suggestion-box {
+    color: white;
+    z-index:1.5;
+    margin: 0;
+    padding:0;
+    font-size: 15pt;
+    font-family: monospace;
+    line-height: 20pt;
+    position: absolute;
+    top: 0;
+    left:2em;
+    border: 0;
+}
+
+/* the first autocompletion value */
+#suggestion { 
+    color: #444343;
+}
+
+/* the other autocompletion values */
+#suggestions {
+    padding-top: 0;
+    border-radius: 5pt;
+    background-color: #2a2a2a;
+    box-shadow: 0 0 1px #242424;
+}
+
+.show * {
+    transition: 0.2s;
+    opacity: 1;
+}
+
+.hide * {
+    transition: 0.1s;
+    opacity: 0;
+}
+
+/* top bar */
+
+#side-bar {
+    position: absolute;
+    height:100%;
+    width: 75px;
+    z-index: 4;
+    top: 0;
+    right: 0;
+    text-align: center;
+    background-color: #323226;
+}
+
+#run-button {
+    width:  50px;
+    height: 25px;
+    background: #3f523b;
+    border-radius: 10px;
+    font-size:  10pt;
+    margin-top: 10px;
+    text-align: center;
+    border: 0;
+    color: #739173;
+    box-shadow: 0 0 2px black;
+    transition: 0.2s;
+}
+
+#run-button:hover {
+    transition: 0.2s;
+    width:  55px;
+    height: 27.5px;
+}
+
+/* rendered text colors (slightly inspired by VSCode's :D) */
+
+.string          { color: #CE9178 }
+.class           { color: #4EC9B0 }
+.value           { color: #9CDCFE }
+.number          { color: #B5CEA8 }
+.keyword         { color: #569CD6 }
+.special-fn      { color: #5665d6 }
+.special-var     { color: #2a73d5 }
+.keyword-control { color: #C586C0 }
+.punctuation     { color: #848484 }
+.function        { color: #DCDCAA }
+.const           { color: #4FC1FF }
+.comment         { color: #6A9955 }
+.directive       { color: #ca8398 }
+
+.plaintext { color: #D4D4D4 }
