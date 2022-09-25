@@ -430,7 +430,7 @@
                         if (values.length) {
                             suggestion.innerHTML  = '<span>'+(values[0].slice(currenttoken.length)||'<br>')+'</span>';
                             suggestions.innerHTML = values
-                                .map(s=>`<span class="${basicColor(s)}">${currenttokenlinepos} ${s}${![''].includes((caretscope[s]??{}).type)&&(caretscope[s]??{}).type?`<span class="punctuation">: ${'&nbsp;'.repeat(maxl-s.length)}</span><span class="class">${(caretscope[s]??{}).type}</span>`:''}${(caretscope[s]??{}).src?`<span class="punctuation"> •${(caretscope[s]??{}).src}</span>`:''}</span>`)
+                                .map(s=>`<span class="${basicColor(s)}">${s}${![''].includes((caretscope[s]??{}).type)&&(caretscope[s]??{}).type?`<span class="punctuation">: ${'&nbsp;'.repeat(maxl-s.length)}</span><span class="class">${(caretscope[s]??{}).type}</span>`:''}${(caretscope[s]??{}).src?`<span class="punctuation"> •${(caretscope[s]??{}).src}</span>`:''}</span>`)
                                 .join('<br>');
                             suggestion_box.classList.remove('hide');
                             suggestion_box.classList.add('show');
